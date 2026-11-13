@@ -1,0 +1,61 @@
+# flutter_llm_proxy config example.
+# Check it with:  dart run bin/flutter_llm_proxy.dart check-config example/proxy.yaml
+# Try it with:    dart run bin/flutter_llm_proxy.dart serve --config example/proxy.yaml --mock
+
+# Providers the app may reach. The app calls  <proxy>/<prefix>/<upstream path>.
+# Keys are read from SERVER environment variables (key_env) - never put a key
+# in this file, and never in the app.
+providers:
+  openai:
+    prefix: /openai                       # app calls /openai/v1/chat/completions
+    upstream: https://api.openai.com
+    key_env: OPENAI_API_KEY
+    key_header: bearer                    # Authorization: Bearer <key>
+    allowed_paths: [/v1/chat/completions]
+    allowed_models: [gpt-4o-mini]         # empty list = any model (not recommended)
+    inject_include_usage: true            # so streamed replies report token usage
+  anthropic:
+    prefix: /anthropic
+    upstream: https://api.anthropic.com
+    key_env: ANTHROPIC_API_KEY
+    key_header: x-api-key
+    allowed_paths: [/v1/messages]
+    allowed_models: [claude-haiku-4-5]
+  gemini:
+    prefix: /gemini
+    upstream: https://generativelanguage.googleapis.com
+    key_env: GEMINI_API_KEY
+    key_header: x-goog-api-key
+    # "*" matches inside one path segment: the model name.
+    allowed_paths:
+      - /v1beta/models/*:streamGenerateContent
+      - /v1beta/models/*:generateContent
+    allowed_models: [gemini-2.0-flash]
+
+# Firebase App Check: the app sends its token in the X-Firebase-AppCheck header.
+app_check:
+  mode: firebase                          # firebase | local | off (off = local development only)
+  project_number: "123456789012"          # Project settings > General > Project number
+  project_id: my-firebase-project
+  allowed_app_ids:                        # App IDs from Project settings > Your apps
+    - "1:123456789012:android:0a1b2c3d4e5f"
+    - "1:123456789012:ios:6a7b8c9d0e1f"
+    - "1:123456789012:web:2a3b4c5d6e7f"
+  # jwks_url: https://firebaseappcheck.googleapis.com/v1/jwks   # the default
+  # dev_tokens: ["only-for-curl-on-localhost"]   # refused on a non-loopback host
+
+# Limits are kept in memory, per server instance.
+limits:
+  subject: app+ip                         # app | ip | app+ip  (App Check sub is the app, not the device)
+  requests_per_minute: 20
+  tokens_per_day: 200000                  # per subject, counted from reported usage
+  global_tokens_per_day: 2000000          # all subjects together
+
+# Flutter web: origins allowed to call the proxy from a browser.
+cors:
+  allow_origins:
+    - https://my-firebase-project.web.app
+    - http://localhost:5000
+
+max_body_bytes: 1048576                   # 1 MiB request body limit
+trust_forwarded_for: false                # true only behind Cloud Run / nginx that sets X-Forwarded-For
