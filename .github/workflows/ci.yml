@@ -1,0 +1,30 @@
+# 키·모델 없이 mock 모드로 전체 흐름을 검증한다(Dart CLI·패키지).
+# 매트릭스 최저 버전 = pubspec.yaml environment.sdk 하한 = pubspec.lock sdks.dart 하한
+# (test/ci_matrix_test.dart 가 셋이 맞는지 확인한다).
+name: ci
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"   # 매주 월요일 — 의존성·SDK 가 바뀌어 깨지지 않았는지 정기 확인
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: ["3.5.0", "stable"]
+    steps:
+      - uses: actions/checkout@v4.4.0
+      - uses: dart-lang/setup-dart@v1.8.2
+        with:
+          sdk: ${{ matrix.sdk }}
+      - run: dart pub get
+      - run: dart analyze
+      - run: dart test
+        env:
+          DEMO_MODE: mock
+      # 단일 실행 파일로도 같은 데모가 도는지(키·네트워크 없이)
+      - run: mkdir -p build && dart compile exe bin/flutter_llm_proxy.dart -o build/flutter-llm-proxy
+      - run: build/flutter-llm-proxy demo --lang en
