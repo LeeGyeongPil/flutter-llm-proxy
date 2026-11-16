@@ -27,7 +27,7 @@ dart run bin/flutter_llm_proxy.dart --version
 ```
 
 ```text
-flutter_llm_proxy 0.1.0
+flutter_llm_proxy 0.1.1
 ```
 
 ## 빠르게 시작하기 (키·Firebase·네트워크 없이)

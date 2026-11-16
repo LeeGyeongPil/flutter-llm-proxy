@@ -12,8 +12,9 @@ void main() {
         loadYaml(File('pubspec.yaml').readAsStringSync()) as YamlMap;
     expect(pubspec['version'], packageVersion);
     final changelog = File('CHANGELOG.md').readAsStringSync();
-    final first =
-        RegExp(r'^## (\S+)', multiLine: true).firstMatch(changelog)!.group(1);
+    final first = RegExp(r'^## (?!Unreleased)(\S+)', multiLine: true)
+        .firstMatch(changelog)!
+        .group(1);
     expect(first, packageVersion);
   });
 }

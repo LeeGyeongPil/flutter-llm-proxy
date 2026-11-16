@@ -125,7 +125,7 @@ void main() {
       () {
     const p = '/v1beta/models/*:streamGenerateContent';
     expect(
-        pathAllowed(p, '/v1beta/models/gemini-2.0-flash:streamGenerateContent'),
+        pathAllowed(p, '/v1beta/models/gemini-3.6-flash:streamGenerateContent'),
         isTrue);
     expect(pathAllowed(p, '/v1beta/models/a/b:streamGenerateContent'), isFalse);
     expect(pathAllowed(p, '/v1beta/models/..%2Ffiles:streamGenerateContent'),

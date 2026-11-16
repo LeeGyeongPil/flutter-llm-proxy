@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Example config: replace the retired Gemini 2.0 Flash model with `gemini-3.6-flash` and link provider deprecation pages.
+
 ## 0.1.0
 
 First release.

@@ -12,6 +12,7 @@ providers:
     key_env: OPENAI_API_KEY
     key_header: bearer                    # Authorization: Bearer <key>
     allowed_paths: [/v1/chat/completions]
+    # Check the provider deprecation schedule: https://platform.openai.com/docs/deprecations
     allowed_models: [gpt-4o-mini]         # empty list = any model (not recommended)
     inject_include_usage: true            # so streamed replies report token usage
   anthropic:
@@ -30,7 +31,8 @@ providers:
     allowed_paths:
       - /v1beta/models/*:streamGenerateContent
       - /v1beta/models/*:generateContent
-    allowed_models: [gemini-2.0-flash]
+    # Check the provider deprecation schedule: https://ai.google.dev/gemini-api/docs/deprecations
+    allowed_models: [gemini-3.6-flash]
 
 # Firebase App Check: the app sends its token in the X-Firebase-AppCheck header.
 app_check:

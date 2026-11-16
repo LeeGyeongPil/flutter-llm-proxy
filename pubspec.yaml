@@ -2,7 +2,7 @@ name: flutter_llm_proxy
 description: >-
   Keep OpenAI, Anthropic and Gemini keys off Flutter apps: a Dart shelf proxy
   with Firebase App Check checks, rate limits and unbuffered SSE streaming.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/LeeGyeongPil/flutter-llm-proxy
 issue_tracker: https://github.com/LeeGyeongPil/flutter-llm-proxy/issues
 topics:
